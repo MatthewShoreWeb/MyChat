@@ -1,0 +1,30 @@
+#container {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+#chatContainer {
+  display: flex;
+  align-items: center;
+}
+
+#chatInput {
+  border: 2px solid black;
+  border-radius: 15px;
+  height: 40px;
+  width: 300px;
+  margin: 5px;
+}
+
+#sendBtn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: lightgrey;
+  color: rgb(84, 83, 83);
+  font-weight: 600;
+  border-radius: 15px;
+  height: 40px;
+  width: 150px;
+}
