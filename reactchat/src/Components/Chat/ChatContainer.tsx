@@ -8,7 +8,7 @@ interface EndUser {
 export default function ChatContainer({ endUser }: EndUser) {
     return (
         <div id='chatContainer'>
-            
+        
         </div>
     )
 }
