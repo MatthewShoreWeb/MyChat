@@ -1,21 +1,30 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 
 interface ClientInfo {
     clientInfo: string;
+    type: string;
 }
 
-export default function ClientListItem({clientInfo}: ClientInfo) {
-    const [clientState, updateState] = useState(<></>)
+export default function ClientListItem({clientInfo, type}: ClientInfo) {
+    const [clientState, updateState] = useState(<></>);
+    const container = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
         if (typeof clientInfo !== 'string') return;
 
         updateState(<p>{clientInfo}</p>);
 
-    }, [clientInfo])
+    }, [clientInfo]);
+
+    useEffect(() => {
+        if (typeof type !== 'string') return;
+
+        if (type === 'me') container?.current?.classList.add('me')
+
+    }, [type]);
 
     return (
-        <div className='clientItem'>
+        <div className='clientItem' ref={container}>
             {clientState}
         </div>
     )

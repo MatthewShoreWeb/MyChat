@@ -50,3 +50,7 @@
 .clientItem:hover {
     background-color: rgb(2, 144, 144);
 }
+
+.clientItem.me {
+    background-color: green;
+}

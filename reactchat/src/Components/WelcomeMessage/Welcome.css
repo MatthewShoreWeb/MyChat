@@ -1,7 +1,11 @@
-#welcomeContainer {
+/* Reusable class for centering an element: */
+.centered {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+#welcomeContainer {
     width: 500px;
     height: 200px;
     flex-direction: column;
@@ -13,9 +17,6 @@
 }
 
 #welcomeTitle {
-    display: flex;
-    align-items: center;
-    justify-content: center;
     height: 20%;
     width: 100%;
     font-weight: 600;
@@ -24,9 +25,6 @@
 }
 
 #welcomeBody {
-    display: flex;
-    align-items: center;
-    justify-content: center;
     flex-direction: column;
     height: 80%;
     width: 100%;
@@ -42,9 +40,6 @@
 }
 
 #welcomeConfirm {
-    display: flex;
-    align-items: center;
-    justify-content: center;
     background-color: #2563eb;
     color: #ffffff;
     height: 50px;
@@ -52,4 +47,8 @@
     border: 2px solid #1e3a8a;
     border-radius: 15px;
     user-select: none;
+}
+
+#welcomeInput.error {
+    border: 2px solid red;
 }

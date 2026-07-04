@@ -6,19 +6,18 @@ import WelcomeMessage from './Components/WelcomeMessage/WelcomeMessage.tsx';
 const socket = new WebSocket('ws://localhost:8000');
 socket.onopen = () => console.log('connected');
 
-let userName = '';
-
 function App() {
   const [text, updateText] = useState('');
   const [clientList, updateClientList] = useState([]);
   const [popupModal, updateModal] = useState(<WelcomeMessage confirmClicked={welcomeConfirm} />);
   const [modalVisibility, updateVisibility] = useState('block');
+  const [username, updateUsername] = useState('');
 
-  function welcomeConfirm() {
-    console.log('click');
+  function welcomeConfirm(name) {
     // Close the modal:
     updateModal(<></>);
-    document.querySelector('#popupModal').style.display = 'none'; // Remove this.
+    updateVisibility('none');
+    updateUsername(name);
   }
 
   socket.onmessage = (event) => {
@@ -39,7 +38,7 @@ function App() {
       <div id='popupModal' style={{display: modalVisibility}}>
         {popupModal}
       </div>
-      <ClientList clients={clientList} />
+      <ClientList me={username} clients={clientList} />
       <div id='chatContainer'>
         <input id='chatInput' type='text' placeholder='Enter a message' onChange={(e) => updateText(e.target.value)} />
         <button id='sendBtn' onClick={() => { socket.send(text) }}>
