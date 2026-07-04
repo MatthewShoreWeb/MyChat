@@ -1,1 +1,1 @@
-Node.js + React based chat app. Live chat using websockets.
+Node.js + React based chat app. Live chat using websockets
