@@ -6,7 +6,7 @@ interface ClientListProps {
     me: string;
 }
 
-export default function ClientList({ clients = [], me }: ClientListProps) {
+export default function ClientList({ clients, me }: ClientListProps) {
     return (
         <div id='clientListContainer'>
             <div id='clientListHeader'>

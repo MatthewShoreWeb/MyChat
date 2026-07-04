@@ -10,9 +10,7 @@ export default function ClientListItem({clientInfo, type}: ClientInfo) {
     const container = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
-        if (typeof clientInfo !== 'string') return;
-
-        updateState(<p>{clientInfo}</p>);
+        updateState(<p>{clientInfo.username || 'New User'}</p>);
 
     }, [clientInfo]);
 
