@@ -1,0 +1,55 @@
+#welcomeContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 500px;
+    height: 200px;
+    flex-direction: column;
+    background-color: #eef4fb;
+    border-radius: 10px;
+    border: 2px solid #ffffff;
+    margin: auto;
+    margin-top: 200px;
+}
+
+#welcomeTitle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 20%;
+    width: 100%;
+    font-weight: 600;
+    font-size: 24px;
+    color: #1a2b4c;
+}
+
+#welcomeBody {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    height: 80%;
+    width: 100%;
+}
+
+#welcomeInput {
+    border: 2px solid #c7d6e8;
+    border-radius: 15px;
+    height: 30px;
+    width: 60%;
+    text-align: center;
+    margin: 20px;
+}
+
+#welcomeConfirm {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #2563eb;
+    color: #ffffff;
+    height: 50px;
+    width: 100px;
+    border: 2px solid #1e3a8a;
+    border-radius: 15px;
+    user-select: none;
+}

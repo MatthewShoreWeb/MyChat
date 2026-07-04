@@ -21,9 +21,7 @@ function broadcastToClient(type, data) {
       client.send(JSON.stringify({ 'type': type, 'data': data.join(',') }));
     })
   }
-
 }
-
 
 wss.on('connection', (ws) => {
   // Assign a client ID to identify the client:
@@ -31,6 +29,7 @@ wss.on('connection', (ws) => {
   console.log(`Client ${clientID} has connected.`);
   // Push to list & send to clients:
   connectClients.push(clientID);
+  ws.send(JSON.stringify({ 'type': 'clientID', 'data': clientID }));
   broadcastToClient('clientList', connectClients);
 
   ws.on('message', (message) => {
@@ -39,10 +38,14 @@ wss.on('connection', (ws) => {
   });
 
   ws.on('close', () => {
-    // connectClients.delete(clientID)
+    console.log(`${clientID} has disconnected.`);
+    // When a user disconnects, remove them from the list, then publish the updated list to all clients:
+    console.log(`${clientID} has disconnected.`);
+    const index = connectClients.indexOf(clientID);
+    if (index !== -1) connectClients.splice(index, 1);
+    broadcastToClient('clientList', connectClients);
   });
 });
-
 
 server.listen(8000, () => {
   console.log(`App running on ${8000}`);
