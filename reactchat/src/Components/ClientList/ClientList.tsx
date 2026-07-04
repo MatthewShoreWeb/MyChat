@@ -1,24 +1,20 @@
-import { useEffect, useState } from 'react';
+import ClientListItem from './ClientListItem.tsx';
 import './Clients.css'
 
 interface ClientListProps {
-     clients: [];
+    clients: string[];
 }
 
 export default function ClientList({ clients = [] }: ClientListProps) {
-    const [clientList, updateList] = useState([]);
-
-    useEffect(() => {
-        if (!clients || !clients.length) return;
-    }, [clients]);
-
     return (
         <div id='clientListContainer'>
             <div id='clientListHeader'>
                 <p>Connected Clients</p>
             </div>
             <div id='clientListBody'>
-                {clientList}
+                {clients.map((client) => (
+                    <ClientListItem key={client} clientInfo={client} />
+                ))}
             </div>
         </div>
     )
