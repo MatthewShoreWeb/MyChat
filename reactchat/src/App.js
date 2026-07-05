@@ -40,10 +40,7 @@ function App() {
   }
 
   // Ensures that the client the user is on is not includes in the list of connectable clients:
-  useEffect(() => {
-    if (!clientList || !thisUser) return;
-    updateClientList(clientList.filter(item => item.id !== thisUser.id));
-  }, [thisUser]);
+  const visibleClients = clientList.filter(c => c.id !== thisUser?.id);
 
   return (
     <div id='container'>
@@ -52,7 +49,7 @@ function App() {
       </div>
 
       <div id='appBody'>
-        <ClientList me={thisUser} clients={clientList} />
+        <ClientList me={thisUser} clients={visibleClients} />
         <ChatContainer />
       </div>
 
