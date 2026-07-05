@@ -21,23 +21,26 @@ function App() {
     socket.send(JSON.stringify({ 'type': 'username', 'data': name }));
   }
 
-  socket.onmessage = (event) => {
-    console.log(event.data);
-    try {
-      const data = JSON.parse(event.data);
-      if (!data || !data.type || !data.data) return;
+  // Wrapped here to tie to the component's lifecycle:
+  useEffect(() => {
+    socket.onmessage = (event) => {
+      console.log(event.data);
+      try {
+        const data = JSON.parse(event.data);
+        if (!data || !data.type || !data.data) return;
 
-      if (data.type === 'thisUser' && data && data.data) {
-        updateThisUser(data.data);
-      }
+        if (data.type === 'thisUser' && data && data.data) {
+          updateThisUser(data.data);
+        }
 
-      if (data.type === 'clientList' && data && data.data) {
-        // Filter out any values that don't have an id or username:
-        updateClientList(data.data.filter(client => client.id && client.username));
-        return;
-      }
-    } catch (e) { }
-  }
+        if (data.type === 'clientList' && data && data.data) {
+          // Filter out any values that don't have an id or username:
+          updateClientList(data.data.filter(client => client.id && client.username));
+          return;
+        }
+      } catch (e) { }
+    }
+  }, []);
 
   // Ensures that the client the user is on is not includes in the list of connectable clients:
   const visibleClients = clientList.filter(c => c.id !== thisUser?.id);
