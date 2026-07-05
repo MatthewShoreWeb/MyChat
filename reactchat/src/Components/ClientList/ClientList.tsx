@@ -4,12 +4,10 @@ import './Clients.css'
 interface ClientListProps {
     clients: string[];
     me: string;
+    selectUser: Function;
 }
 
-export default function ClientList({ clients, me }: ClientListProps) {
-    console.log('me');
-    console.log(me);
-
+export default function ClientList({ clients, me, selectUser }: ClientListProps) {
     return (
         <div id='clientListContainer'>
             <div id='clientListHeader'>
@@ -18,7 +16,7 @@ export default function ClientList({ clients, me }: ClientListProps) {
             <div id='clientListBody'>
                 <ClientListItem key={me.id} clientInfo={me} type='me' />
                 {clients.map((client) => (
-                    <ClientListItem key={client.id} clientInfo={client} type='client' />
+                    <ClientListItem key={client.id} clientInfo={client} selectUser={selectUser} type='client' />
                 ))}
             </div>
         </div>

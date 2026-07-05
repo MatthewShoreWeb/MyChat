@@ -3,9 +3,10 @@ import { useEffect, useState, useRef } from 'react';
 interface ClientInfo {
     clientInfo: string;
     type: string;
+    selectUser: Function;
 }
 
-export default function ClientListItem({clientInfo, type}: ClientInfo) {
+export default function ClientListItem({ clientInfo, type, selectUser }: ClientInfo) {
     const [clientState, updateState] = useState(<></>);
     const container = useRef<HTMLInputElement>(null);
 
@@ -21,8 +22,13 @@ export default function ClientListItem({clientInfo, type}: ClientInfo) {
 
     }, [type]);
 
+    function selectUserWrapper() {
+        if (typeof selectUser !== 'function') return;
+        selectUser(clientInfo);
+    }
+
     return (
-        <div className='clientItem' ref={container}>
+        <div className='clientItem' ref={container} onClick={selectUserWrapper}>
             {clientState}
         </div>
     )

@@ -1,18 +1,26 @@
 import { useEffect, useRef, useState } from 'react';
 import './Chat.css';
 
+interface EndUser {
+    id: String;
+    username: String;
+}
+
 interface types {
-    endUser: string
+    endUser: EndUser;
     sendMessage: Function;
 }
+
+
 
 export default function ChatContainer({ endUser, sendMessage }: types) {
     const messageBox = useRef<HTMLTextAreaElement>(null);
     const [headerMessage, updateHeader] = useState('');
 
     useEffect(() => {
+        console.log('a')
         try {
-            const setMessage = endUser ? `You are talking to ${endUser}` : 'Please select a user to chat with';
+            const setMessage = endUser?.username ? `You are talking to ${endUser.username}` : 'Please select a user to chat with';
             updateHeader(setMessage);
         } catch (e) { console.log(e); }
     }, [endUser]);

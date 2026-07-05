@@ -13,6 +13,9 @@ function App() {
   const [popupModal, updateModal] = useState(<WelcomeMessage confirmClicked={welcomeConfirm} />);
   const [modalVisibility, updateVisibility] = useState('block');
   const [thisUser, updateThisUser] = useState('');
+  
+  // End user is who the client currently talking to:
+  const [endUser, updateEndUser] = useState('');
 
   function welcomeConfirm(name) {
     // Close the modal:
@@ -24,7 +27,6 @@ function App() {
   // Wrapped here to tie to the component's lifecycle:
   useEffect(() => {
     socket.onmessage = (event) => {
-      console.log(event.data);
       try {
         const data = JSON.parse(event.data);
         if (!data || !data.type || !data.data) return;
@@ -42,6 +44,11 @@ function App() {
     }
   }, []);
 
+  function selectUser(clientInfo) {
+    if (typeof clientInfo !== 'object') return;
+    updateEndUser(clientInfo);
+  }
+
   // Ensures that the client the user is on is not includes in the list of connectable clients:
   const visibleClients = clientList.filter(c => c.id !== thisUser?.id);
 
@@ -52,8 +59,8 @@ function App() {
       </div>
 
       <div id='appBody'>
-        <ClientList me={thisUser} clients={visibleClients} />
-        <ChatContainer />
+        <ClientList me={thisUser} clients={visibleClients} selectUser={selectUser} />
+        <ChatContainer endUser={endUser} />
       </div>
 
     </div>
