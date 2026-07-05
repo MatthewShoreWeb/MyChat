@@ -10,7 +10,7 @@ export default function ClientListItem({clientInfo, type}: ClientInfo) {
     const container = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
-        updateState(<p>{clientInfo.username || 'New User'}</p>);
+        updateState(<p>{clientInfo.username}</p>);
 
     }, [clientInfo]);
 

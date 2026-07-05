@@ -13,9 +13,9 @@ export default function ClientList({ clients, me }: ClientListProps) {
                 <p>Connected Clients</p>
             </div>
             <div id='clientListBody'>
-                <ClientListItem key='me' clientInfo={me} type='me' />
+                <ClientListItem key={me.id} clientInfo={me} type='me' />
                 {clients.map((client) => (
-                    <ClientListItem key={client} clientInfo={client} type='client' />
+                    <ClientListItem key={client.id} clientInfo={client} type='client' />
                 ))}
             </div>
         </div>

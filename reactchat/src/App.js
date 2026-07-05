@@ -2,6 +2,7 @@ import './App.css';
 import { useEffect, useState } from 'react';
 import ClientList from './Components/ClientList/ClientList.tsx';
 import WelcomeMessage from './Components/WelcomeMessage/WelcomeMessage.tsx';
+import ChatContainer from './Components/Chat/ChatContainer.tsx';
 
 const socket = new WebSocket('ws://localhost:8000');
 socket.onopen = () => console.log('connected');
@@ -13,11 +14,11 @@ function App() {
   const [modalVisibility, updateVisibility] = useState('block');
   const [thisUser, updateThisUser] = useState('');
 
-  function welcomeConfirm(name) { 
+  function welcomeConfirm(name) {
     // Close the modal:
     updateModal(<></>);
     updateVisibility('none');
-    socket.send(JSON.stringify({'type': 'username', 'data': name}));
+    socket.send(JSON.stringify({ 'type': 'username', 'data': name }));
   }
 
   socket.onmessage = (event) => {
@@ -31,6 +32,7 @@ function App() {
       }
 
       if (data.type === 'clientList' && data && data.data) {
+        // Filter out any values that don't have an id or username:
         updateClientList(data.data.filter(client => client.id && client.username));
         return;
       }
@@ -45,15 +47,13 @@ function App() {
 
   return (
     <div id='container'>
-      <div id='popupModal' style={{display: modalVisibility}}>
+      <div id='popupModal' style={{ display: modalVisibility }}>
         {popupModal}
       </div>
-      <ClientList me={thisUser} clients={clientList} />
-      <div id='chatContainer'>
-        <input id='chatInput' type='text' placeholder='Enter a message' onChange={(e) => updateText(e.target.value)} />
-        <button id='sendBtn' onClick={() => { socket.send(text) }}>
-          Send message
-        </button>
+
+      <div id='appBody'>
+        <ClientList me={thisUser} clients={clientList} />
+        <ChatContainer />
       </div>
 
     </div>
