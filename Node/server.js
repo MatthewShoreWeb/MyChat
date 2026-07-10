@@ -7,21 +7,29 @@ const app = express();
 const server = http.createServer(app);
 const wss = new WebSocketServer({ server });
 
-// Using a map for key / value pair as it allows direct lookups:
-const connectedClients = new Map();
-const messages = [{}, {}];
-
-// Ensure strings follow consistent rules, to expand later:
+// Ensure strings follow consistent rules:
 function sanitiseString(string) {
   if (!string || typeof string !== 'string') return;
-  return string.trim();
+
+  // Trim white space:
+  string = string.trim();
+
+  // Remove double spaces:
+  string = string.replace(/ {2,}/g, ' ');
+
+  return string;
 }
+
+// Using a map for key / value pair as it allows direct lookups:
+const connectedClients = new Map();
+const messages = [];
+
 
 function broadcastToClient(type, data) {
   if (type === 'clientList') {
     wss.clients.forEach((client) => {
       client.send(JSON.stringify({ 'type': type, 'data': data }));
-    })
+    });
     return;
   }
 }
@@ -41,6 +49,7 @@ wss.on('connection', (ws) => {
       const messageJSON = JSON.parse(message);
       let username;
 
+      // Logic for when a user first sets their username:
       if (messageJSON.type === 'username') {
         username = messageJSON.data;
         if (connectedClients) {
@@ -49,6 +58,10 @@ wss.on('connection', (ws) => {
           ws.send(JSON.stringify({ type: 'thisUser', data: { id: clientID, username: username } }));
           broadcastToClient('clientList', connectedClients);
         }
+
+      // Logic for when a user sends a message to another user:  
+      } else if (messageJSON.type === 'chatMessage') {
+
       }
     } catch (e) { console.log(e); }
   });
@@ -62,6 +75,6 @@ wss.on('connection', (ws) => {
   });
 });
 
-server.listen(8000, () => {
+server.listen((8000), () => {
   console.log(`App running on ${8000}`);
-})
+});
