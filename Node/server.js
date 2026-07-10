@@ -8,7 +8,7 @@ const server = http.createServer(app);
 const wss = new WebSocketServer({ server });
 
 // Using a map for key / value pair as it allows direct lookups:
-const connectClients = new Map();
+const connectedClients = new Map();
 const messages = [{}, {}];
 
 // Ensure strings follow consistent rules, to expand later:
@@ -31,9 +31,9 @@ wss.on('connection', (ws) => {
   const clientID = crypto.randomUUID();
   console.log(`Client ${clientID} has connected.`);
   // Push to list & send to clients:
-  connectClients.set(clientID, { username: '' });
+  connectedClients.set(clientID, { username: '' });
   ws.send(JSON.stringify({ 'type': 'clientID', 'data': clientID }));
-  broadcastToClient('clientList', connectClients);
+  broadcastToClient('clientList', connectedClients);
 
 
   ws.on('message', (message) => {
@@ -43,11 +43,11 @@ wss.on('connection', (ws) => {
 
       if (messageJSON.type === 'username') {
         username = messageJSON.data;
-        if (connectClients.size) {
+        if (connectedClients) {
           const client = connectedClients.get(clientID);
           if (client) client.username = username;
           ws.send(JSON.stringify({ type: 'thisUser', data: { id: clientID, username: username } }));
-          broadcastToClient('clientList', connectClients);
+          broadcastToClient('clientList', connectedClients);
         }
       }
     } catch (e) { console.log(e); }
@@ -56,9 +56,9 @@ wss.on('connection', (ws) => {
   ws.on('close', () => {
     // When a user disconnects, remove them from the list, then publish the updated list to all clients:
     console.log(`${clientID} has disconnected.`);
-    const disconnectedUser = connectClients.get(clientID);
-    if (disconnectedUser) connectClients.delete(clientID);
-    broadcastToClient('clientList', connectClients);
+    const disconnectedUser = connectedClients.get(clientID);
+    if (disconnectedUser) connectedClients.delete(clientID);
+    broadcastToClient('clientList', connectedClients);
   });
 });
 
