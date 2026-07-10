@@ -7,8 +7,9 @@ const app = express();
 const server = http.createServer(app);
 const wss = new WebSocketServer({ server });
 
-// Data structure: {id: '', name: ''}
-const connectClients = [];
+// Using a map for key / value pair as it allows direct lookups:
+const connectClients = new Map();
+const messages = [{}, {}];
 
 // Ensure strings follow consistent rules, to expand later:
 function sanitiseString(string) {
@@ -19,10 +20,10 @@ function sanitiseString(string) {
 function broadcastToClient(type, data) {
   if (type === 'clientList') {
     wss.clients.forEach((client) => {
-      client.send(JSON.stringify({ 'type': type, 'data': data}));
+      client.send(JSON.stringify({ 'type': type, 'data': data }));
     })
     return;
-  } 
+  }
 }
 
 wss.on('connection', (ws) => {
@@ -30,7 +31,7 @@ wss.on('connection', (ws) => {
   const clientID = crypto.randomUUID();
   console.log(`Client ${clientID} has connected.`);
   // Push to list & send to clients:
-  connectClients.push({id: clientID, username: ''});
+  connectClients.set(clientID, { username: '' });
   ws.send(JSON.stringify({ 'type': 'clientID', 'data': clientID }));
   broadcastToClient('clientList', connectClients);
 
@@ -39,14 +40,13 @@ wss.on('connection', (ws) => {
     try {
       const messageJSON = JSON.parse(message);
       let username;
-      
+
       if (messageJSON.type === 'username') {
         username = messageJSON.data;
-        if (connectClients.length) {
-          connectClients.forEach((item) => {
-            if (item.id === clientID) item.username = username;
-          })
-          ws.send(JSON.stringify({type: 'thisUser', data: {id: clientID, username: username}}));
+        if (connectClients.size) {
+          const client = connectedClients.get(clientID);
+          if (client) client.username = username;
+          ws.send(JSON.stringify({ type: 'thisUser', data: { id: clientID, username: username } }));
           broadcastToClient('clientList', connectClients);
         }
       }
@@ -54,11 +54,10 @@ wss.on('connection', (ws) => {
   });
 
   ws.on('close', () => {
-    console.log(`${clientID} has disconnected.`);
     // When a user disconnects, remove them from the list, then publish the updated list to all clients:
     console.log(`${clientID} has disconnected.`);
-    const index = connectClients.findIndex(client => client.id === clientID);
-if (index !== -1) connectClients.splice(index, 1);
+    const disconnectedUser = connectClients.get(clientID);
+    if (disconnectedUser) connectClients.delete(clientID);
     broadcastToClient('clientList', connectClients);
   });
 });
