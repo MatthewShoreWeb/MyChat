@@ -12,17 +12,15 @@ interface types {
 }
 
 
-
 export default function ChatContainer({ endUser, sendMessage }: types) {
     const messageBox = useRef<HTMLTextAreaElement>(null);
     const [headerMessage, updateHeader] = useState('');
 
     useEffect(() => {
-        console.log('a')
         try {
             const setMessage = endUser?.username ? `You are talking to ${endUser.username}` : 'Please select a user to chat with';
             updateHeader(setMessage);
-        } catch (e) { console.log(e); }
+        } catch (e) { }
     }, [endUser]);
 
     // Wrapper function to perform validation:
@@ -45,7 +43,7 @@ export default function ChatContainer({ endUser, sendMessage }: types) {
             </div>
             <div id='chatInput'>
                 <textarea ref={messageBox} placeholder='Enter a message' />
-                <div id='sendButton' onClick={() => { }}>
+                <div id='sendButton' onClick={() => {sendMessageWrapper();}}>
                     Send Message
                 </div>
             </div>

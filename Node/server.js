@@ -24,7 +24,6 @@ function sanitiseString(string) {
 const connectedClients = new Map();
 const messages = [];
 
-
 function broadcastToClient(type, data) {
   if (type === 'clientList') {
     wss.clients.forEach((client) => {
@@ -41,7 +40,7 @@ wss.on('connection', (ws) => {
   // Push to list & send to clients:
   connectedClients.set(clientID, { username: '' });
   ws.send(JSON.stringify({ 'type': 'clientID', 'data': clientID }));
-  broadcastToClient('clientList', connectedClients);
+  broadcastToClient('clientList', Array.from(connectedClients.entries()));
 
 
   ws.on('message', (message) => {
@@ -56,7 +55,7 @@ wss.on('connection', (ws) => {
           const client = connectedClients.get(clientID);
           if (client) client.username = username;
           ws.send(JSON.stringify({ type: 'thisUser', data: { id: clientID, username: username } }));
-          broadcastToClient('clientList', connectedClients);
+          broadcastToClient('clientList', Array.from(connectedClients.entries()));
         }
 
       // Logic for when a user sends a message to another user:  
@@ -71,7 +70,7 @@ wss.on('connection', (ws) => {
     console.log(`${clientID} has disconnected.`);
     const disconnectedUser = connectedClients.get(clientID);
     if (disconnectedUser) connectedClients.delete(clientID);
-    broadcastToClient('clientList', connectedClients);
+    broadcastToClient('clientList', Array.from(connectedClients.entries()));
   });
 });
 

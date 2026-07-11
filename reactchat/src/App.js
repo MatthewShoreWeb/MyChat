@@ -29,15 +29,15 @@ function App() {
     socket.onmessage = (event) => {
       try {
         const data = JSON.parse(event.data);
-        if (!data || !data.type || !data.data) return;
+        if (!data || typeof data.type !== 'string') return;
 
-        if (data.type === 'thisUser' && data && data.data) {
+
+        if (data.type === 'thisUser') {
           updateThisUser(data.data);
         }
-
-        if (data.type === 'clientList' && data && data.data) {
-          // Filter out any values that don't have an id or username:
-          updateClientList(data.data.filter(client => client.id && client.username));
+        
+        if (data.type === 'clientList' && data.data) {
+          updateClientList(data.data.map((client) => { return {"id": client[0], "username": client[1].username} }));
           return;
         }
       } catch (e) { }
@@ -49,8 +49,12 @@ function App() {
     updateEndUser(clientInfo);
   }
 
+  function sendMessage() {
+    console.log('sending message')
+  }
+
   // Ensures that the client the user is on is not includes in the list of connectable clients:
-  const visibleClients = clientList.filter(c => c.id !== thisUser?.id);
+  const visibleClients = clientList.filter((client) => client.id !== thisUser?.id);
 
   return (
     <div id='container'>
@@ -60,7 +64,7 @@ function App() {
 
       <div id='appBody'>
         <ClientList me={thisUser} clients={visibleClients} selectUser={selectUser} />
-        <ChatContainer endUser={endUser} />
+        <ChatContainer endUser={endUser} sendMessage={sendMessage}/>
       </div>
 
     </div>
