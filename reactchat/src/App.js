@@ -36,7 +36,9 @@ function App() {
           updateThisUser(data.data);
         }
         
-        if (data.type === 'clientList' && data.data) {
+        if (data.type === 'clientList' && data.data && data.data[0][1].username) {
+          console.log('ribbit')
+          console.log(data.data)
           updateClientList(data.data.map((client) => { return {"id": client[0], "username": client[1].username} }));
           return;
         }
