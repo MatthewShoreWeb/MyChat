@@ -57,7 +57,10 @@
     padding: 5px;
     font-size: 20px;
     background-color: lightgrey;
+}
 
+#chatInput > .error {
+    border: 2px solid red;
 }
 
 #sendButton {
@@ -78,3 +81,4 @@
 #sendButton:hover {
     background-color: rgb(1, 129, 146);
 }
+

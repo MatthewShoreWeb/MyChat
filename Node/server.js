@@ -22,7 +22,9 @@ function sanitiseString(string) {
 
 // Using a map for key / value pair as it allows direct lookups:
 const connectedClients = new Map();
-const messages = [];
+
+// Stores all the chat histories that a user has:
+const messages = new Map();
 
 function broadcastToClient(type, data) {
   if (type === 'clientList') {
@@ -60,7 +62,14 @@ wss.on('connection', (ws) => {
 
       // Logic for when a user sends a message to another user:  
       } else if (messageJSON.type === 'chatMessage') {
+        const messages = messageJSON.data;
+        const endUser = messageJSON.endUser;
+        if (!messages || endUser) return;
 
+        // Pull up the user's existing chat history:
+        let existingChats = messages.get(clientID);
+
+        
       }
     } catch (e) { console.log(e); }
   });

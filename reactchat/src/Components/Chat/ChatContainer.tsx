@@ -26,9 +26,13 @@ export default function ChatContainer({ endUser, sendMessage }: types) {
     // Wrapper function to perform validation:
     function sendMessageWrapper() {
         const userMessage = messageBox?.current?.value;
-        if (typeof userMessage !== 'string' || !userMessage.length || typeof sendMessage !== 'function') return;
+        if (typeof userMessage !== 'string' || !userMessage.length || typeof sendMessage !== 'function') {
+            messageBox?.current?.classList.add('error');
+        } else {
+            messageBox?.current?.classList.remove('error');
+        }
 
-        sendMessage();
+        sendMessage(userMessage);
     }
 
     return (

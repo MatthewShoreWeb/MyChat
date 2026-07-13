@@ -37,8 +37,6 @@ function App() {
         }
         
         if (data.type === 'clientList' && data.data && data.data[0][1].username) {
-          console.log('ribbit')
-          console.log(data.data)
           updateClientList(data.data.map((client) => { return {"id": client[0], "username": client[1].username} }));
           return;
         }
@@ -51,8 +49,10 @@ function App() {
     updateEndUser(clientInfo);
   }
 
-  function sendMessage() {
+  function sendMessage(message) {
     console.log('sending message')
+    if (typeof message !== 'string' || !endUser) return;
+    socket.send({'type': 'chatMessage', 'data': {'message': message, 'endUser': endUser }});
   }
 
   // Ensures that the client the user is on is not includes in the list of connectable clients:
